@@ -38,8 +38,6 @@ PhonicsApp.service('Editor', function Editor(Autocomplete, ASTManager,
       enableSnippets: true
     });
     loadEditorSettings();
-
-    ASTManager.refresh(editor.getValue());
     onFoldChanged(ASTManager.onFoldChanged);
 
     // Editor is ready, fire the on-ready function and flush the queue
@@ -216,6 +214,12 @@ PhonicsApp.service('Editor', function Editor(Autocomplete, ASTManager,
     }
   }
 
+  function focus() {
+    if (editor) {
+      editor.focus();
+    }
+  }
+
   this.aceLoaded = aceLoaded;
   this.resize = resize;
   this.ready = ready;
@@ -232,4 +236,5 @@ PhonicsApp.service('Editor', function Editor(Autocomplete, ASTManager,
   this.saveEditorSettings = saveEditorSettings;
   this.adjustFontSize = adjustFontSize;
   this.resetSettings = resetSettings;
+  this.focus = focus;
 });

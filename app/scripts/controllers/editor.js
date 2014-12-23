@@ -1,7 +1,7 @@
 'use strict';
 
 PhonicsApp.controller('EditorCtrl', function EditorCtrl($scope, $rootScope,
-  Editor, Builder, Storage, ASTManager) {
+  Editor, Builder, Storage) {
   var debouncedOnAceChange = _.debounce(onAceChange, 200);
 
   $scope.aceLoaded = Editor.aceLoaded;
@@ -22,6 +22,5 @@ PhonicsApp.controller('EditorCtrl', function EditorCtrl($scope, $rootScope,
     var value = $rootScope.editorValue;
 
     Storage.save('yaml', value);
-    ASTManager.refresh();
   }
 });

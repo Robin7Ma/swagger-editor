@@ -15,8 +15,6 @@ PhonicsApp.controller('PreviewCtrl', function PreviewCtrl(Storage, Builder,
       return;
     }
 
-    ASTManager.refresh(latest);
-
     // If backend is not healthy don't update
     if (!BackendHealthCheck.isHealthy() && !$rootScope.isPreviewMode) {
       return;
@@ -80,9 +78,6 @@ PhonicsApp.controller('PreviewCtrl', function PreviewCtrl(Storage, Builder,
     $scope.loadLatest();
   }
 
-  ASTManager.onFoldStatusChanged(function () {
-    _.defer(function () { $scope.$apply(); });
-  });
   $scope.isCollapsed = ASTManager.isFolded;
   $scope.isAllFolded = ASTManager.isAllFolded;
   $scope.toggle = function (path) {
@@ -123,6 +118,7 @@ PhonicsApp.controller('PreviewCtrl', function PreviewCtrl(Storage, Builder,
     offset = offset || 0;
     $event.stopPropagation();
     Editor.gotoLine(line - offset);
+    Editor.focus();
   };
 
   /*

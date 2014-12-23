@@ -36,8 +36,6 @@ PhonicsApp.service('Autocomplete', function ($rootScope, snippets, ASTManager,
   * Get filter function for snippets based on a position (`pos`)
   */
   function filterForSnippets(pos) {
-    ASTManager.refresh($rootScope.editorValue);
-
     var path = getPathForPosition(pos);
 
     // If there is no path being returned by AST Manager and only one character

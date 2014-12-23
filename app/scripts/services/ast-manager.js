@@ -4,7 +4,7 @@
  * Manages the AST representation of the specs for fold status
  * and other meta information about the specs tree
 */
-PhonicsApp.service('ASTManager', function ASTManager() {
+PhonicsApp.service('ASTManager', function ASTManager($rootScope) {
   var MAP_TAG = 'tag:yaml.org,2002:map';
   var SEQ_TAG = 'tag:yaml.org,2002:seq';
   var INDENT = 2; // TODO: make indent dynamic based on document
@@ -15,11 +15,11 @@ PhonicsApp.service('ASTManager', function ASTManager() {
   /*
   ** Update ast with changes from editor
   */
-  function refreshAST(value) {
+  function refresh(value) {
     var error = null;
 
     try {
-      yamlBuffer = value || '';
+      yamlBuffer = value || $rootScope.editorValue;
       ast = yaml.compose(value);
     } catch (err) {
       error = err;
@@ -123,6 +123,7 @@ PhonicsApp.service('ASTManager', function ASTManager() {
    * return back line number of an specific node with given path
   */
   function lineForPath(path) {
+    refresh();
     var node = walk(path);
 
     if (node) {
@@ -141,6 +142,7 @@ PhonicsApp.service('ASTManager', function ASTManager() {
    *   in line of the code in the editor
   */
   function pathForPosition(line, row) {
+    refresh();
     /* jshint camelcase: false */
     var result = [];
     var start;
@@ -169,7 +171,7 @@ PhonicsApp.service('ASTManager', function ASTManager() {
         yaml += ' ';
       }
 
-      refreshAST(yaml);
+      refresh(yaml);
     }
 
     if (line === undefined) {
@@ -222,7 +224,7 @@ PhonicsApp.service('ASTManager', function ASTManager() {
     }
 
     // Put back yamlBuffer
-    if (buffer) { refreshAST(buffer); }
+    if (buffer) { refresh(buffer); }
 
     return result;
   }
@@ -322,6 +324,7 @@ PhonicsApp.service('ASTManager', function ASTManager() {
    * @return {boolean} - true if the node is folded, false otherwise
   */
   this.isFolded = function (path) {
+    refresh();
     var node = walk(path, ast);
 
     return angular.isObject(node) && !!node.folded;
@@ -334,6 +337,7 @@ PhonicsApp.service('ASTManager', function ASTManager() {
    * @returns {boolean} - true if all nodes are folded, false, otherwise
   */
   this.isAllFolded = function (path) {
+    refresh();
     var node = walk(path);
     var subNode;
 
@@ -364,7 +368,7 @@ PhonicsApp.service('ASTManager', function ASTManager() {
   };
 
   // Expose the methods externally
-  this.refresh = refreshAST;
+  this.refresh = refresh;
   this.lineForPath = lineForPath;
   this.pathForPosition = pathForPosition;
 });
